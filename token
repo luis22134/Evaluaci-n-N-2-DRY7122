@@ -1,0 +1,16 @@
+import requests
+import json
+
+#API
+host = 'https://sandboxdnac2.cisco.com'
+API_TOKEN = '/dna/system/api/v1/auth/token'
+
+header = {
+         "Content-Type" : "application/json"
+          }
+    
+#basic auth Basic ZGV2bmV0dXNlcjpDaXNjbzEyMyE=
+
+authentication = ("devnetuser","Cisco123!")
+token = requests.post(url=host+API_TOKEN, headers=header, verify=False, auth=authentication)
+token = token.json()["Token"]

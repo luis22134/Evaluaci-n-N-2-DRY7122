@@ -1,0 +1,37 @@
+import requests
+
+main_api = "https://www.mapquestapi.com/directions/v2/route?"
+key = "gT0KyynGju8cjZ7HOsfQt7stWD5jZ8bk"
+
+while True:
+    orig = input("City of Origin: ")
+    if orig == "q":
+        break
+    dest = input("City of Destination: ")
+    if dest == "q":
+        break
+
+    url = main_api + f"key={key}&from={orig}&to={dest}"
+    json_data = requests.get(url).json()
+
+    if json_data["info"]["statuscode"] == 0:
+        distance = round(json_data["route"]["distance"] * 1.61, 2)  # Convert distance to kilometers
+        duration = json_data["route"]["formattedTime"]
+        fuel_used = round(json_data["route"]["fuelUsed"] * 3.78, 2)  # Convert fuel used to liters
+
+        hours, minutes, seconds = map(int, duration.split(":"))
+        duration_formatted = f"{hours} hours, {minutes} minutes, {seconds} seconds"
+
+        print("=============================================")
+        print(f"Directions from {orig} to {dest}")
+        print(f"Distance: {distance} kilometers")
+        print(f"Trip Duration: {duration_formatted}")
+        print(f"Fuel Used: {fuel_used} liters")
+        print("=============================================")
+
+        narrative = json_data["route"]["formattedTime"] + "\n" + json_data["route"]["legs"][0]["maneuvers"][0]["narrative"]
+        print("Narrative:\n" + narrative)
+    else:
+        print("Unable to retrieve directions. Please try again.")
+
+    print("\n")
